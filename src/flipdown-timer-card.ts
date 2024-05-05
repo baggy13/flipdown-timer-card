@@ -228,6 +228,14 @@ export class FlipdownTimer extends LitElement {
       return this._showError(localize('common.show_error'));
     }
 
+    const icon = html`<state-badge
+            class="icon-small"
+            .hass=${this.hass}
+            .stateObj=${this.hass!.states[this.config.entity!]}
+            .overrideIcon="mdi:dishwasher"
+            .stateColor="#000000"
+        ></state-badge>`;
+
     return html`
       <ha-card>
         <div class="card-content">
@@ -243,7 +251,11 @@ export class FlipdownTimer extends LitElement {
             ${(this.config.styles.button && this.config.styles.button.width) && '--button-width: ' + this.config.styles.button.width + ';'}
             ${(this.config.styles.button && this.config.styles.button.height) && '--button-height: ' + this.config.styles.button.height + ';' }
           ">
-            <div id="flipdown" class="flipdown"></div>
+            <div id="flipdown" class="flipdown">
+              <div style="position: relative; display: inline-block; border: solid thin red;">
+                <div style="">${icon}</div>
+              </div>
+            </div>
           </div>
         </div>
       </ha-card>
