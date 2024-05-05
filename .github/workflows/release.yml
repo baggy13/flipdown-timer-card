@@ -9,22 +9,31 @@ jobs:
     name: Prepare release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v1
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      # Build
+      - name: Make slug values available
+        uses: gacts/github-slug@v1
+        id: slug
+
       - name: Build the file
         run: |
-          cd /home/runner/work/boilerplate-card/boilerplate-card
-          npm install
-          npm run build
+          cd /home/runner/work/flipdown-timer-card/flipdown-timer-card
+          yarn install
+          yarn version --no-git-tag-version --new-version ${{ steps.slug.outputs.version }}
+          yarn build
 
-      # Upload build file to the releas as an asset.
       - name: Upload zip to release
         uses: svenstaro/upload-release-action@v1-release
 
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: /home/runner/work/boilerplate-card/boilerplate-card/dist/boilerplate-card.js
-          asset_name: boilerplate-card.js
+          file: /home/runner/work/flipdown-timer-card/flipdown-timer-card/dist/flipdown-timer-card.js
+          asset_name: flipdown-timer-card.js
           tag: ${{ github.ref }}
           overwrite: true
+
+      - name: Verify HACS compliance
+        uses: hacs/action@main
+        with:
+          category: plugin
